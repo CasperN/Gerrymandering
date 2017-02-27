@@ -1,0 +1,6 @@
+# ignore R data
+*.RData
+*.log
+*.fls
+*.fdb_latexmk
+*.aux
