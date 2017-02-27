@@ -230,6 +230,8 @@
 \def\sion{\sum_{i=1}^n}
 \def\sjon{\sum_{j=1}^n}
 \def\sjom{\sum_{j=1}^m}
+\def\sjod{\sum_{j=1}^d}
+\def\sjok{\sum_{j=1}^k}
 \def\snoi{\sum_{n=1}^\infty}
 \def\sioi{\sum_{i=1}^\infty}
 \def\snzi{\sum_{n=0}^\infty}
@@ -239,9 +241,8 @@
 \def\skon{\sum_{k=1}^n}
 \def\skzn{\sum_{k=0}^n}
 \def\pion{\prod_{i=1}^n}
-\def\sjok{\sum_{j=1}^k}
 \def\siod{\sum_{i=1}^d}
-\def\sjod{\sum_{j=1}^d}
+
 
 % SHORTCUTS FOR INTEGRALS
 \def\ipp{\int_{-\pi}^\pi}
@@ -278,8 +279,8 @@
 %--------------------------------------------------------------
 \pagestyle{fancy}
 
-\lhead{\name}
-\chead{\classnumber\space\space-\space\type\space\num}
+\lhead{\classnumber}
+\chead{\type:\space\num}
 \rhead{\due}
 
 \title{
@@ -289,7 +290,7 @@
     (Progress Report)
 }
 \author{
-	Peter Gao, Casper Neo, Nishesh Sharma \\
+	 Peter Gao, Casper Neo, Nishesh Sharma
 }
 \author
 
@@ -320,7 +321,6 @@
 
         \item Something about the notion of stability
 
-
     \end{enumerate}
 
     \item Methods Implemented
@@ -333,10 +333,12 @@
         Let $wasted(A)$ be the number of wasted votes cast by party $A$.
         Then define the efficiency gap as
         $$
-        \text{ Efficiency Gap}(A,B)\defeq \frac{\text{wasted(A)-wasted(B)}}{
+        \text{ Efficiency Gap}(A,B)\defeq \frac{wasted(A)-wasted(B)}{
         \#\text{votes}
         }
         $$
+
+        \item Partisan Bias
 
         \item Lopsided Victories (Wang)
 
@@ -345,17 +347,32 @@
         will win by small margins. We use a two sided $T$ test to compare the
         means of the winning margin of the two parties.
 
-
     \end{enumerate}
-    \item Preliminary Results
+    \item Preliminary Results and challenges
     \begin{enumerate}
-        \item
+        \item One of the initial challenges was finding data.
+        ``http://projects.iq.harvard.edu/eda/'' provides shape file and
+        election data. However we found that the data formats were not uniform over
+        different states (i.e. there were columns missing or named differently).
+        ``https://www.ncsbe.gov/Election-Results'' provided data over just
+        North Carolina. 
+
+
     \end{enumerate}
 
     \item Simulations (To be completed)
     \begin{enumerate}
         \item Sampling from Simulated Delegations - Excess seats (Wang)
+
         \item Perturbation of Existing Map
+
+        For a given election outcome
+        consider for $N$ simulations, exchanging $k$ voting blocks along the
+        boundary of voting districts. If the original voting districts were
+        gerrymandered we would expect our metrics to decrease in a majority of
+        the simulations assuming the gerrymander-er would have, in
+        gerrymandering, chosen a local maximum of our metrics by choice of map.
+
     \end{enumerate}
 \end{enumerate}
 
