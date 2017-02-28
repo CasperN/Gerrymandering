@@ -62,4 +62,11 @@ We could also try to perform a two-sample $t$ test, but we note that elections a
 
 As outlined above, the efficiency gap measures the difference in wasted votes.
 
+### Partisan Bias (Thomas et al. 2012)
+
 ### Lopsided Victories (Wang 2016)
+
+## Early Thoughts
+
+## Future Plans
+
