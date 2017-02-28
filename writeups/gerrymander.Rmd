@@ -1,0 +1,85 @@
+---
+title: "Gerrymandering Progress Report"
+author: "Peter Gao, Casper Neo, Nishesh Sharma"
+date: "February 27, 2017"
+output: pdf_document
+---
+
+## Introduction
+
+Gerrymandering refers to the practice of redrawing the boundaries of an electoral constituency to favor a chosen group, typically a racial group or political party. In the United States, most states require electoral districts to be redrawn every ten years, coinciding with the decennial U.S. census. Ostensibly, this process is meant to update districts according to demographic change, but in many states the redistricting process is controlled by the political party in power. As such, political parties looking to consolidate their power may use the redistricting process to draw districts that put their representatives in favorable elections. 
+
+In recent years, growth in computing power and openly accessible data has contributed to an increased interest in quantifying gerrymandering. The issue of gerrymandering is especially vital today, as the Supreme Court is due to decide on multiple gerrymandering cases in 2017. However, the government still has yet to settle the question of how precisely to measure and define gerrymandering. What does gerrymandering look like in a heavily Republican state? Or a perennially contested swing state? Many political scientists and statisticians have proposed tests and metrics for identifying and defining gerrymandering; for our project, we have replicated some of these measures of gerrymandering and hope to compare and contrast them.
+
+## Guiding Example
+
+Following the 2010 U.S. Census, the North Carolina state legislature (controlled by Republicans at the time) approved a new redistricting plan. Democrats and some critics complained that Republicans had worked to pack, or concentrate, Democratic voters in a few, heavily Democratic districts, while distributing Republican votes in such a way to give Republicans a narrow but stable lead in the remaining districts (a practice commonly referred to as cracking and packing). These critics would go on to point to the Democrats' poor showing in the 2012 Congressional elections as a reflection of the unfair redistricting process. [^1]
+
+[^1]: Ballotpedia.
+
+To (naively) evaluate this claim, we used the efficiency gap measure proposed by Nicholas Stephanopoulos and Eric McGhee (2015). Simply put, the efficiency gap measures the difference between the number of votes wasted by Democrats and the number of votes wasted by Republicans. Wasted votes are those cast for losing candidates added to those cast for winning candidates above the number needed to win an election, i.e. the superfluous votes. The absolute difference in wasted votes between the two parties is divided by the total votes cast in the election in the state in order to enable comparison. We calculated the efficiency gap for elections from 2006-2016 (note that we calculated our efficiency gap by subtracting Republican wasted votes from Democratic wasted votes, so a positive efficiency gap reflects unfavorable conditions for Democrats)
+
+```{r, echo = F, cache = T, fig.height = 3.5}
+hr2016 <- read.csv("C:/Users/pgao/Dropbox/Winter 2017/Multiple Testing/2016_NC_USHR_summary.csv")
+hr2014 <- read.csv("C:/Users/pgao/Dropbox/Winter 2017/Multiple Testing/2014_NC_USHR_summary.csv")
+hr2012 <- read.csv("C:/Users/pgao/Dropbox/Winter 2017/Multiple Testing/2012_NC_USHR_summary.csv")
+hr2010 <- read.csv("C:/Users/pgao/Dropbox/Winter 2017/Multiple Testing/2010_NC_USHR_summary.csv")
+hr2008 <- read.csv("C:/Users/pgao/Dropbox/Winter 2017/Multiple Testing/2008_NC_USHR_summary.csv")
+hr2006 <- read.csv("C:/Users/pgao/Dropbox/Winter 2017/Multiple Testing/2006_NC_USHR_summary.csv")
+
+
+efficiency.gap.nc <- function (data) {
+  rep.wasted <- 0
+  dem.wasted <- 0
+  for (race in levels(data$contest.name)){
+    needed <- .5*sum(subset(data, (contest.name == race) & (party.name == 'DEM' | party.name == 'REP'))$total.votes)
+    dem.votes <- subset(data, (contest.name == race) & (party.name == 'DEM'))$total.votes
+    rep.votes <- subset(data, (contest.name == race) & (party.name == 'REP'))$total.votes
+    if (dem.votes > rep.votes){
+      rep.wasted <- rep.wasted + rep.votes
+      dem.wasted <- dem.wasted + (dem.votes - needed)
+    } else {
+      rep.wasted <- rep.wasted + (rep.votes - needed)
+      dem.wasted <- dem.wasted + dem.votes
+    }
+  }
+  gap <- (dem.wasted - rep.wasted)/(dem.wasted + rep.wasted)
+  return (gap)
+}
+pre <- c(efficiency.gap.nc(hr2006),efficiency.gap.nc(hr2008), efficiency.gap.nc(hr2010))
+post <- c(efficiency.gap.nc(hr2012), efficiency.gap.nc(hr2014), efficiency.gap.nc(hr2016))
+
+plot(seq(2006, 2016, 2), c(efficiency.gap.nc(hr2006),efficiency.gap.nc(hr2008), efficiency.gap.nc(hr2010),
+                           efficiency.gap.nc(hr2012), efficiency.gap.nc(hr2014), efficiency.gap.nc(hr2016)),
+     ylab = 'efficiency gap', xlab = 'year', main = "Figure 1. Efficiency Gap (D - R) in NC Congressional Race")
+```
+
+We could also try to perform a two-sample $t$ test, but we note that elections are not independent of each other, making such a test unusable. As such, this example illustrates a fundamental problem in thinking about gerrymandering: even when a trend appears to reflect gerrymandering, the complexity of politics, geography, and demography make it difficult to set a universal fair standard against which we could compare potentially gerrymandered districts. Even if we could establish that the efficiency gap was significantly different post-2010, we would still need to come to the consensus that efficiency gap is an effective way to measure gerrymandering.
+
+## Methods Implemented
+
+### Efficiency Gap (Stephanopoulos and McGhee 2015)
+
+As outlined above, the efficiency gap measures the difference in wasted votes. Wasted votes are those cast for the losing candidate in a race and those cast for a winning candidate in excess of what is needed to win. By adding up the wasted votes for each party and calculating the difference, the efficiency gap aims to measure how favorable a redistricting plan is for each party. In particular, the efficiency gap would seem likely to work well at recognizing when a party implements a "pack-and-crack" plan, which concentrates opposition voters in a small number of heavily majority-opposition districts while maintaining a small majority in the rest of districts. Under such a plan, a redistricting party would waste very few votes, winning many races by a small number of votes and losing a small number of races by a huge gap.
+
+Mathematically, we can calculate the efficiency gap for party $A$ as follows: 
+  $$
+  \text{ Efficiency Gap}(A,B)=\frac{\#\textrm{wasted}(A)-\#\textrm{wasted}(B)}{
+  \#\text{votes}
+  }
+  $$
+
+Though the efficiency gap is elegant and simple to calculate, some commenters have raised concerns that the efficiency gap is ineffective since it is not invariant under a uniform swing of the vote (that is, it depends not on how the districts are drawn, but solely on the results of the election). In particular, critics note that it is discontinuous, with huge fluctuations for closely contested districts.[^2] We hope to simulate this in the future.
+
+[^2]: autoredistrict.org. 
+
+### Uniform Swing Partisan Bias (Thomas et al. 2012)
+
+In general, measures of partisan bias seek to estimate the difference in seats won by each party given that each party wins half of the vote. However, in any real election, the two parties will almost never win precisely half the vote each. As such, the estimation of partisan bias hinges upon the reallocation of votes to simulate an "even" election. In other words, given a state in which Republicans won 60% of the votes, how can we estimate what would have occured had they only won 50%? The naive approach, which we have used here, is the uniform swing approach, in which each district is shifted by the same percentage. That is, in a state where Republicans win 60% of the vote, we shift the vote of each district down 10% to simulate an even election. We can then count the number of seats won by each party in this simulated election, dividing by the total number of seats up for election, to obtain our estimate of partisan bias.
+
+### Lopsided Victories (Wang 2016)
+
+## Early Comparisons
+
+## Future Plans
+
