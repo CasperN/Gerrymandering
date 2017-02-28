@@ -81,5 +81,14 @@ In general, measures of partisan bias seek to estimate the difference in seats w
 
 ## Early Comparisons
 
+First, we note that these metrics vary in their dependence upon actual election results. In theory, partisan bias is a function of election boundaries and the corresponding voters in each district, independent of any recorded election results. On the other hand, the efficiency gap and lopsided victories methods are tied directly to actual election results. Neither of these approaches is necessarily inferior, but they do reflect different ways to measuring gerrymandering. Estimating partisan bias requires us to consider a counterfactual election that has not occured whereas the other aforementioned methods rely only on actual elections. 
+
+Another split is between methods that produce a definitive test statistic and conclusion, like the lopsided victories test, and methods that simply offer an unstandardized measure of some notion of gerrymandering, like partisan bias and the efficiency gap. We hope to further investigate ways in which we can establish some baseline or perhaps even a null distribution for evaluating efficiency gap or partisan bias.
+
 ## Future Plans
 
+For our final project, we hope to flesh out our understanding of these methods and offer further comments and critiques of each method. In particular, we note that many of these methods can be linked through the seats-votes curve, a common type of graph in the gerrymandering literature that plots vote margins versus seat margins. Specifically, a one percent increase in vote share may not necessarily lead to a one percent increase in seat share. However, it is unclear what the optimal relationship between vote share and seat share is. 
+
+We hope to use simulations to illustrate some of the strengths and flaws of each method. For example, what happens to efficiency gap in a state with many closely contested states? What about partisan bias? How do recent election results compare with historical trends?
+
+Finally, we note that gerrymandering is sometimes benign or even beneficial. Some researchers like Gelman and King (1994) have suggested that it may not be as harmful as it is commonly depicted as being. For example, voting rights laws have mandated the creation of majority-minority districts in order to protect minority constituents. This necessarily entails some form of packing. We will need to keep in mind that measuring and quantifying gerrymandering should not be entirely context free.
