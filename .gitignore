@@ -1,5 +1,4 @@
-# ignore R data
-*.RData
+# ignore files
 *.log
 *.fls
 *.fdb_latexmk
