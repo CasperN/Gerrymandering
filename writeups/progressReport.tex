@@ -292,8 +292,6 @@
 \author{
 	 Peter Gao, Casper Neo, Nishesh Sharma
 }
-\author
-
 \date{
 	\due\\
 }
@@ -345,7 +343,20 @@
         If there is partisan gerrymandering then as evidence of voter packing,
         one party will win by large margins while the other party's
         will win by small margins. We use a two sided $T$ test to compare the
-        means of the winning margin of the two parties.
+        means of the winning margin of the two parties. In order to deal with elections where one 
+        party ran unopposed, we added an imputed value parameter that represents the assumed 
+        percentage of votes that the winning party would have received had there been an opponent. 
+        In most cases, tweaking this parameter's value does not significantly alter the p-value for 
+        a given state and year. However, it is possible that across many years and many states, the 
+        choice of imputed value is significant. We plotted the vote proportions in wins for both 
+        Democrats and Republicans for many different states and years. Some sample graphs and p-
+        values are displayed on the following page:  \\
+        \includegraphics[scale=0.5]{PA1984}
+        \includegraphics[scale=0.5]{PA2012} \\
+        \includegraphics[scale=0.5]{IL1984}
+        \includegraphics[scale=0.5]{IL2012} \\
+        ~\\
+        These graphs correspond to PA 1984 (p-value of 0.679), PA 2012 (p-value of 0.03), IL 1984 (p-value of 0.843), and IL 2012 (p-value of 0.766) respectively from left to right.
 
     \end{enumerate}
     \item Preliminary Results and challenges
